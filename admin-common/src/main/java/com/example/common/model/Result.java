@@ -1,0 +1,34 @@
+package com.example.common.model;
+
+import com.example.common.model.enums.ErrorCode;
+import lombok.Data;
+
+@Data
+public class Result<T> {
+
+    private boolean success;
+    private String message;
+    private T data;
+
+    public static <T> Result<T> success(T data) {
+        Result<T> result = new Result<>();
+        result.success = true;
+        result.data = data;
+        return result;
+    }
+
+    public static <T> Result<T> success() {
+        return success(null);
+    }
+
+    public static <T> Result<T> failure(String code, String message) {
+        Result<T> result = new Result<>();
+        result.success = false;
+        result.message = message;
+        return result;
+    }
+
+    public static <T> Result<T> failure(ErrorCode errorCode) {
+        return failure(errorCode.name(), errorCode.getMessage());
+    }
+}

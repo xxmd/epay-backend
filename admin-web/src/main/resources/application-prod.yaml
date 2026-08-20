@@ -1,0 +1,14 @@
+spring:
+  mail:
+    host: smtp.qiye.aliyun.com
+    port: 465
+    username: your-ali-email@your-domain.com
+    password: your-ali-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory

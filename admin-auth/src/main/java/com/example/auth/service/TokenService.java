@@ -1,6 +1,6 @@
 package com.example.auth.service;
 
-import com.example.system.model.entity.User;
+import com.example.common.domain.entity.User;
 import com.example.auth.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;

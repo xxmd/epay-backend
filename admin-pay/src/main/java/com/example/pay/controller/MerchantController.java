@@ -5,7 +5,7 @@ import com.example.pay.domain.dto.MerchantDto;
 import com.example.pay.domain.entity.Merchant;
 import com.example.pay.domain.query.MerchantQueryCondition;
 import com.example.pay.domain.vo.MerchantVo;
-import com.example.crud.model.annotation.PermissionPrefix;
+import com.example.crud.domain.annotation.PermissionPrefix;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

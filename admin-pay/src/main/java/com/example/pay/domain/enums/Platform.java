@@ -1,7 +1,7 @@
 package com.example.pay.domain.enums;
 
-import com.example.common.model.annotation.ExportEnum;
-import com.example.common.model.enums.WithLabelEnum;
+import com.example.common.domain.annotation.ExportEnum;
+import com.example.common.domain.enums.WithLabelEnum;
 
 @ExportEnum
 public enum Platform implements WithLabelEnum {

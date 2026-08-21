@@ -1,5 +1,7 @@
 package com.example.web.controller;
 
+import com.example.common.domain.Result;
+import com.example.web.service.EnumService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,15 +12,10 @@ import java.util.Map;
 @RequestMapping("/enum")
 @AllArgsConstructor
 public class EnumController {
-    private final EnumRegistry enumRegistry;
-
-    @GetMapping
-    public Map<String, List<Map<String, String>>> getAll() {
-        return enumRegistry.getAll();
-    }
+    private final EnumService enumService;
 
     @GetMapping("/{name}")
-    public List<Map<String, String>> getByName(@PathVariable String name) {
-        return enumRegistry.get(name);
+    public Result<List<Map<String, String>>> getByName(@PathVariable String name) {
+        return Result.success(enumService.get(name));
     }
 }

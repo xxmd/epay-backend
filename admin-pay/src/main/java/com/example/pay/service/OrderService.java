@@ -1,12 +1,13 @@
 package com.example.pay.service;
 
 import com.example.common.exception.BusinessException;
-import com.example.common.model.enums.ErrorCode;
+import com.example.common.domain.enums.CommonError;
 import com.example.crud.service.EntityCrudService;
 import com.example.pay.domain.dto.OrderDto;
 import com.example.pay.domain.entity.EPayNotifyParam;
 import com.example.pay.domain.entity.Merchant;
 import com.example.pay.domain.entity.Order;
+import com.example.pay.domain.enums.PayError;
 import com.example.pay.domain.enums.PayStatus;
 import com.example.pay.domain.query.OrderQueryCondition;
 import com.example.pay.domain.vo.OrderVo;
@@ -60,7 +61,7 @@ public class OrderService extends EntityCrudService<Order, OrderQueryCondition, 
         Order entity = dtoToEntity(dto);
         List<Merchant> merchants = merchantRepository.findEnabledMerchantsByMethodId(dto.getMethodId());
         if (merchants.isEmpty()) {
-            throw new BusinessException(ErrorCode.NO_AVAILABLE_MERCHANT);
+            throw new BusinessException(CommonError.NO_AVAILABLE_MERCHANT);
         }
         entity.setMerchant(merchants.get(0));
         entity.setOrderNumber(generateOrderNumber());
@@ -76,7 +77,7 @@ public class OrderService extends EntityCrudService<Order, OrderQueryCondition, 
             throw new IllegalArgumentException("Id can't be null when update");
         }
         Order entity = repository.findById(dto.getId())
-                .orElseThrow(() -> new BusinessException("订单不存在"));
+                .orElseThrow(() -> new BusinessException(PayError.ORDER_NOT_EXISTED));
         entity.setRemark(dto.getRemark());
         repository.save(entity);
     }
@@ -92,7 +93,7 @@ public class OrderService extends EntityCrudService<Order, OrderQueryCondition, 
         return dateStr + seqStr;
     }
 
-    public boolean isNotifyParamValid(EPayNotifyParam notifyParam)  {
+    public boolean isNotifyParamValid(EPayNotifyParam notifyParam) {
         if (!notifyParam.isValid()) {
             log.warn("notifyParam invalid: {}", notifyParam);
             return false;

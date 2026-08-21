@@ -1,6 +1,6 @@
 package com.example.auth.security;
 
-import com.example.common.model.annotation.Anonymous;
+import com.example.common.domain.annotation.Anonymous;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

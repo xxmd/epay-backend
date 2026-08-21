@@ -1,6 +1,6 @@
 package com.example.pay.service;
 
-import com.example.crud.model.annotation.DataPermission;
+import com.example.crud.domain.annotation.DataPermission;
 import com.example.crud.service.EntityCrudService;
 import com.example.file.repository.LocalFileRepository;
 import com.example.pay.domain.dto.ApplicationDto;
@@ -8,7 +8,6 @@ import com.example.pay.domain.entity.Application;
 import com.example.pay.domain.query.ApplicationQueryCondition;
 import com.example.pay.domain.vo.ApplicationVo;
 import com.example.pay.domain.vo.SimpleApplicationVo;
-import com.example.pay.domain.vo.SimpleMethodVo;
 import com.example.pay.mapper.ApplicationMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

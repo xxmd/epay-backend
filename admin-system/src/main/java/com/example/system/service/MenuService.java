@@ -1,10 +1,10 @@
 package com.example.system.service;
 
 import com.example.crud.service.EntityCrudService;
-import com.example.system.model.dto.MenuDto;
-import com.example.system.model.entity.Menu;
-import com.example.system.model.query.MenuQueryCondition;
-import com.example.system.model.vo.MenuVo;
+import com.example.system.domain.dto.MenuDto;
+import com.example.common.domain.entity.Menu;
+import com.example.system.domain.query.MenuQueryCondition;
+import com.example.system.domain.vo.MenuVo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.example.pay.domain.entity;
 
-import com.example.common.model.entity.BaseEntity;
+import com.example.common.domain.entity.BaseEntity;
 import com.example.pay.domain.enums.PayStatus;
 import jakarta.persistence.*;
 import lombok.Getter;

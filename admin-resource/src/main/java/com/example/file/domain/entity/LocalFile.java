@@ -1,6 +1,6 @@
 package com.example.file.domain.entity;
 
-import com.example.common.model.entity.BaseEntity;
+import com.example.common.domain.entity.BaseEntity;
 import com.example.common.util.SpringContextHolder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PostRemove;

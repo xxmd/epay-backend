@@ -1,10 +1,10 @@
 package com.example.auth.service;
 
-import com.example.common.model.Result;
-import com.example.auth.model.dto.EmailRegisterDto;
-import com.example.system.model.entity.User;
-import com.example.common.model.enums.ErrorCode;
-import com.example.system.repository.UserRepository;
+import com.example.auth.domain.dto.EmailRegisterDto;
+import com.example.auth.domain.enums.AuthError;
+import com.example.common.exception.BusinessException;
+import com.example.common.domain.entity.User;
+import com.example.common.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -22,44 +22,43 @@ public class RegisterService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
-    public Result<?> sendEmailCaptcha(String email) {
+    public void sendEmailCaptcha(String email) {
         if (StringUtils.isBlank(email)) {
-            return Result.failure(ErrorCode.EMAIL_EMPTY);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_EMPTY);
         }
         if (!email.matches(EMAIL_REGEX)) {
-            return Result.failure(ErrorCode.EMAIL_FORMAT_ERROR);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_FORMAT_ERROR);
         }
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
-            return Result.failure(ErrorCode.EMAIL_REGISTERED);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_USED);
         }
         try {
             emailService.sendCaptcha(email);
         } catch (Exception e) {
             log.error("注册阶段发送邮箱验证码异常", e);
-            return Result.failure(ErrorCode.UNKNOW_EXCEPTION);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_CAPTCHA_SEND_FAILURE);
         }
-        return Result.success();
     }
 
-    public Result<?> byEmail(EmailRegisterDto dto) {
+    public void byEmail(EmailRegisterDto dto) {
         String email = dto.getEmail();
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
-            return Result.failure(ErrorCode.EMAIL_REGISTERED);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_USED);
         }
         String captcha = emailService.getCaptcha(email);
         if (captcha == null) {
-            return Result.failure(ErrorCode.EMAIL_CAPTCHA_ERROR);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_CAPTCHA_UNSENT_OR_EXPIRED);
         }
         if (!dto.getEmailCaptcha().equals(captcha)) {
-            return Result.failure(ErrorCode.EMAIL_CAPTCHA_MISMATCH);
+            throw new BusinessException(AuthError.REGISTER_EMAIL_CAPTCHA_MISMATCH);
         }
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
-            return Result.failure(ErrorCode.TWICE_INPUT_PASSWORD_MISMATCH);
+            throw new BusinessException(AuthError.REGISTER_TWICE_INPUT_PASSWORD_MISMATCH);
         }
         User user = creteByEmailRegisterDto(dto);
-        return Result.success();
+        userRepository.save(user);
     }
 
     private User creteByEmailRegisterDto(EmailRegisterDto dto) {

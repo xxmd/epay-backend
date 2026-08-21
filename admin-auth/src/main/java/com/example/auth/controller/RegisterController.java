@@ -1,8 +1,8 @@
 package com.example.auth.controller;
 
-import com.example.common.model.Result;
-import com.example.common.model.annotation.Anonymous;
-import com.example.auth.model.dto.EmailRegisterDto;
+import com.example.common.domain.Result;
+import com.example.common.domain.annotation.Anonymous;
+import com.example.auth.domain.dto.EmailRegisterDto;
 import com.example.auth.service.RegisterService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -16,13 +16,15 @@ public class RegisterController {
 
     @Anonymous
     @GetMapping("/sendEmailCaptcha/{email}")
-    public Result<?> sendEmailCaptcha(@PathVariable String email) {
-        return service.sendEmailCaptcha(email);
+    public Result<Void> sendEmailCaptcha(@PathVariable String email) {
+        service.sendEmailCaptcha(email);
+        return Result.success();
     }
 
     @Anonymous
     @PostMapping("/byEmail")
-    public Result<?> byEmail(@RequestBody @Validated EmailRegisterDto dto) {
-        return service.byEmail(dto);
+    public Result<Void> byEmail(@RequestBody @Validated EmailRegisterDto dto) {
+        service.byEmail(dto);
+        return Result.success();
     }
 }

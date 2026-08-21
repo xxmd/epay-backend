@@ -1,6 +1,6 @@
 package com.example.pay.domain.entity;
 
-import com.example.common.model.entity.BaseEntity;
+import com.example.common.domain.entity.BaseEntity;
 import com.example.file.domain.entity.LocalFile;
 import com.example.pay.domain.enums.Platform;
 import jakarta.persistence.*;

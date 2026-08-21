@@ -2,12 +2,12 @@ package com.example.system.service;
 
 import com.example.crud.service.EntityCrudService;
 import com.example.system.mapper.RoleMapper;
-import com.example.system.model.dto.RoleDto;
-import com.example.system.model.entity.Role;
-import com.example.system.model.query.RoleQueryCondition;
-import com.example.system.model.vo.SimpleRoleVo;
-import com.example.system.model.vo.RoleVo;
-import com.example.system.repository.MenuRepository;
+import com.example.system.domain.dto.RoleDto;
+import com.example.common.domain.entity.Role;
+import com.example.system.domain.query.RoleQueryCondition;
+import com.example.system.domain.vo.SimpleRoleVo;
+import com.example.system.domain.vo.RoleVo;
+import com.example.common.repository.MenuRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

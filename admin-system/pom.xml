@@ -20,6 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
+            <artifactId>admin-auth</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
             <artifactId>admin-crud</artifactId>
             <version>1.0.0</version>
         </dependency>

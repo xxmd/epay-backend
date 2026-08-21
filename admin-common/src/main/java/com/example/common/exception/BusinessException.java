@@ -1,13 +1,14 @@
 package com.example.common.exception;
 
-import com.example.common.model.enums.ErrorCode;
+import com.example.common.domain.enums.ReadableError;
+import lombok.Getter;
 
+@Getter
 public class BusinessException extends RuntimeException {
-    public BusinessException(String message) {
-        super(message);
-    }
+    private final String reason;
 
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
+    public BusinessException(ReadableError readableError) {
+        super(readableError.getMessage());
+        this.reason = readableError.getReason();
     }
 }

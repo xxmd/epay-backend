@@ -1,10 +1,11 @@
 package com.example.crud.controller;
 
 import com.example.crud.factory.CrudServiceFactory;
-import com.example.crud.model.annotation.CreatePermission;
-import com.example.crud.model.annotation.DeletePermission;
-import com.example.crud.model.annotation.ReadPermission;
-import com.example.crud.model.annotation.UpdatePermission;
+import com.example.common.domain.Result;
+import com.example.crud.domain.annotation.CreatePermission;
+import com.example.crud.domain.annotation.DeletePermission;
+import com.example.crud.domain.annotation.ReadPermission;
+import com.example.crud.domain.annotation.UpdatePermission;
 import com.example.crud.service.CrudService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,25 +42,28 @@ public abstract class CrudController<T, ID, QC, VO, DTO, CS extends CrudService<
 
     @PostMapping("/create")
     @CreatePermission
-    public void create(@Validated @RequestBody DTO entity) {
+    public Result<Void> create(@Validated @RequestBody DTO entity) {
         service.create(entity);
+        return Result.success();
     }
 
     @PostMapping("/read")
     @ReadPermission
-    public PagedModel<VO> read(@RequestBody QC queryCondition, Pageable pageable) {
-        return service.findAll(queryCondition, pageable);
+    public Result<PagedModel<VO>> read(@RequestBody QC queryCondition, Pageable pageable) {
+        return Result.success(service.findAll(queryCondition, pageable));
     }
 
     @PostMapping("/update")
     @UpdatePermission
-    public void update(@Validated @RequestBody DTO entity) {
+    public Result<Void> update(@Validated @RequestBody DTO entity) {
         service.update(entity);
+        return Result.success();
     }
 
     @PostMapping("/delete")
     @DeletePermission
-    public void delete(@RequestBody Set<ID> idSet) {
+    public Result<Void> delete(@RequestBody Set<ID> idSet) {
         service.delete(idSet);
+        return Result.success();
     }
 }

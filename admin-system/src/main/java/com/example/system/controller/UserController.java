@@ -1,13 +1,14 @@
 package com.example.system.controller;
 
+import com.example.common.domain.Result;
 import com.example.crud.controller.EntityCrudController;
-import com.example.crud.model.annotation.PermissionPrefix;
-import com.example.system.model.dto.UserPasswordDto;
-import com.example.system.model.dto.UserDto;
-import com.example.system.model.dto.UserProfileDto;
-import com.example.system.model.entity.User;
-import com.example.system.model.query.UserQueryCondition;
-import com.example.system.model.vo.UserVo;
+import com.example.crud.domain.annotation.PermissionPrefix;
+import com.example.system.domain.dto.UserPasswordDto;
+import com.example.system.domain.dto.UserDto;
+import com.example.system.domain.dto.UserProfileDto;
+import com.example.common.domain.entity.User;
+import com.example.system.domain.query.UserQueryCondition;
+import com.example.system.domain.vo.UserVo;
 import com.example.system.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,27 +21,29 @@ public class UserController extends EntityCrudController<User, UserQueryConditio
     private final UserService userService;
 
     @GetMapping
-    public UserVo getCurrentUser() {
-        return userService.getCurrentUser();
+    public Result<UserVo> getCurrentUserVo() {
+        return Result.success(userService.getCurrentUserVo());
     }
 
     @GetMapping("/findByUsername/{username}")
-    public UserVo findByUsername(@PathVariable String username) {
-        return userService.findByUsername(username);
+    public Result<UserVo> findByUsername(@PathVariable String username) {
+        return Result.success(userService.findByUsername(username));
     }
 
     @GetMapping("/findByEmail/{email}")
-    public UserVo findByEmail(@PathVariable String email) {
-        return userService.findByEmail(email);
+    public Result<UserVo> findByEmail(@PathVariable String email) {
+        return Result.success(userService.findByEmail(email));
     }
 
     @PostMapping("/updateProfile")
-    public void updateProfile(@RequestBody UserProfileDto dto) {
+    public Result<Void> updateProfile(@RequestBody UserProfileDto dto) {
         userService.updateProfile(dto);
+        return Result.success();
     }
 
     @PostMapping("/updatePassword")
-    public void updatePassword(@RequestBody UserPasswordDto dto) {
+    public Result<Void> updatePassword(@RequestBody UserPasswordDto dto) {
         userService.updatePassword(dto);
+        return Result.success();
     }
 }

@@ -1,9 +1,10 @@
 package com.example.pay.controller;
 
-import com.example.common.model.annotation.Anonymous;
+import com.example.common.domain.Result;
+import com.example.common.domain.annotation.Anonymous;
 import com.example.crud.controller.EntityCrudController;
-import com.example.crud.model.annotation.PermissionPrefix;
-import com.example.crud.model.annotation.UpdatePermission;
+import com.example.crud.domain.annotation.PermissionPrefix;
+import com.example.crud.domain.annotation.UpdatePermission;
 import com.example.pay.domain.dto.OrderDto;
 import com.example.pay.domain.entity.EPayNotifyParam;
 import com.example.pay.domain.entity.Order;
@@ -29,8 +30,9 @@ public class OrderController extends EntityCrudController<Order, OrderQueryCondi
     @Override
     @PostMapping("/update")
     @UpdatePermission
-    public void update(@RequestBody OrderDto dto) {
+    public Result<Void> update(@RequestBody OrderDto dto) {
         orderService.update(dto);
+        return Result.success();
     }
 
     @Anonymous

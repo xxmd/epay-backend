@@ -1,12 +1,13 @@
 package com.example.system.controller;
 
+import com.example.common.domain.Result;
 import com.example.crud.controller.EntityCrudController;
-import com.example.crud.model.annotation.PermissionPrefix;
-import com.example.system.model.dto.RoleDto;
-import com.example.system.model.entity.Role;
-import com.example.system.model.query.RoleQueryCondition;
-import com.example.system.model.vo.SimpleRoleVo;
-import com.example.system.model.vo.RoleVo;
+import com.example.crud.domain.annotation.PermissionPrefix;
+import com.example.system.domain.dto.RoleDto;
+import com.example.common.domain.entity.Role;
+import com.example.system.domain.query.RoleQueryCondition;
+import com.example.system.domain.vo.SimpleRoleVo;
+import com.example.system.domain.vo.RoleVo;
 import com.example.system.service.RoleService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ public class RoleController extends EntityCrudController<Role, RoleQueryConditio
     private final RoleService service;
 
     @GetMapping("/findAll")
-    public List<SimpleRoleVo> findAll() {
-        return service.findAll();
+    public Result<List<SimpleRoleVo>> findAll() {
+        return Result.success(service.findAll());
     }
 }

@@ -1,6 +1,5 @@
 package com.example.file.service;
 
-import com.example.common.model.Result;
 import com.example.crud.service.EntityCrudService;
 import com.example.file.domain.dto.LocalFileDto;
 import com.example.file.domain.entity.LocalFile;
@@ -37,7 +36,7 @@ public class LocalFileService extends EntityCrudService<LocalFile, LocalFileQuer
         uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
     }
 
-    public Result<LocalFileVo> upload(MultipartFile file) throws IOException {
+    public LocalFileVo upload(MultipartFile file) throws IOException {
         String originalName = file.getOriginalFilename();
         if (originalName == null || originalName.isBlank()) {
             originalName = "unnamed";
@@ -63,7 +62,7 @@ public class LocalFileService extends EntityCrudService<LocalFile, LocalFileQuer
         repository.save(entity);
 
         LocalFileVo vo = mapper.toVo(entity);
-        return Result.success(vo);
+        return vo;
     }
 
     private String[] parseFileName(String originalName) {

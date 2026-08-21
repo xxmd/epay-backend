@@ -1,11 +1,12 @@
 package com.example.pay.controller;
 
+import com.example.common.domain.Result;
 import com.example.crud.controller.EntityCrudController;
 import com.example.pay.domain.dto.MethodDto;
 import com.example.pay.domain.entity.Method;
 import com.example.pay.domain.query.MethodQueryCondition;
 import com.example.pay.domain.vo.MethodVo;
-import com.example.crud.model.annotation.PermissionPrefix;
+import com.example.crud.domain.annotation.PermissionPrefix;
 import com.example.pay.domain.vo.SimpleMethodVo;
 import com.example.pay.service.MethodService;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class MethodController extends EntityCrudController<Method, MethodQueryCo
     private final MethodService service;
 
     @GetMapping("/findAll")
-    public List<SimpleMethodVo> findAll() {
-        return service.findAll();
+    public Result<List<SimpleMethodVo>> findAll() {
+        return Result.success(service.findAll());
     }
 }

@@ -1,24 +1,23 @@
 package com.example.system.service;
 
+import com.example.auth.util.AuthContext;
 import com.example.common.exception.BusinessException;
 import com.example.crud.service.EntityCrudService;
-import com.example.system.model.dto.UserDto;
-import com.example.system.model.dto.UserPasswordDto;
-import com.example.system.model.dto.UserProfileDto;
-import com.example.system.model.entity.User;
-import com.example.system.model.query.UserQueryCondition;
-import com.example.system.model.vo.UserVo;
-import com.example.system.repository.RoleRepository;
-import com.example.system.repository.UserRepository;
+import com.example.system.domain.dto.UserDto;
+import com.example.system.domain.dto.UserPasswordDto;
+import com.example.system.domain.dto.UserProfileDto;
+import com.example.common.domain.entity.User;
+import com.example.system.domain.enums.SystemError;
+import com.example.system.domain.query.UserQueryCondition;
+import com.example.system.domain.vo.UserVo;
+import com.example.common.repository.RoleRepository;
+import com.example.common.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -28,14 +27,10 @@ public class UserService extends EntityCrudService<User, UserQueryCondition, Use
     private final UserRepository repository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthContext authContext;
 
-    public UserVo getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            log.error("authentication is null in getCurrentUser method");
-            return null;
-        }
-        User user = (User) authentication.getPrincipal();
+    public UserVo getCurrentUserVo() {
+        User user = authContext.getCurrentUser();
         return mapper.toVo(user);
     }
 
@@ -58,8 +53,7 @@ public class UserService extends EntityCrudService<User, UserQueryCondition, Use
     private void checkUsernameConflict(String username, Long id) {
         Optional<User> optionalUser = repository.findByUsername(username);
         if (optionalUser.isPresent() && !optionalUser.get().getId().equals(id)) {
-            String message = String.format(Locale.US, "用户名: %s已存在", username);
-            throw new BusinessException(message);
+            throw new BusinessException(SystemError.USERNAME_EXISTED);
         }
     }
 
@@ -89,34 +83,20 @@ public class UserService extends EntityCrudService<User, UserQueryCondition, Use
     }
 
     public void updatePassword(UserPasswordDto dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BusinessException("当前用户不存在");
-        }
-        User user = (User) authentication.getPrincipal();
-        if (user == null) {
-            throw new BusinessException("当前用户不存在");
-        }
+        User user = authContext.getCurrentUser();
         boolean matches = passwordEncoder.matches(dto.getSrcPassword(), user.getPassword());
         if (!matches) {
-            throw new BusinessException("原密码错误");
+            throw new BusinessException(SystemError.SRC_PASSWORD_MISMATCH);
         }
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-            throw new BusinessException("新密码和确认密码不一致");
+            throw new BusinessException(SystemError.TWICE_INPUT_PASSWORD_MISMATCH);
         }
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         repository.save(user);
     }
 
     public void updateProfile(UserProfileDto dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BusinessException("当前用户不存在");
-        }
-        User user = (User) authentication.getPrincipal();
-        if (user == null) {
-            throw new BusinessException("当前用户不存在");
-        }
+        User user = authContext.getCurrentUser();
         checkUsernameConflict(dto.getUsername(), user.getId());
         user.setUsername(dto.getUsername());
         user.setNickname(dto.getNickname());

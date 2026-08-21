@@ -1,26 +1,24 @@
 package com.example.auth.security;
 
-import com.example.system.model.entity.User;
+import com.example.auth.util.AuthContext;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.AuditorAware;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class SecurityAuditorAware implements AuditorAware<String> {
+    private final AuthContext authContext;
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Optional.of("system");
+        String currentUsername = authContext.getCurrentUsername();
+        if (StringUtils.isBlank(currentUsername)) {
+            currentUsername = "system";
         }
-        User user = (User) authentication.getPrincipal();
-        if (user == null) {
-            return Optional.of("system");
-        }
-        return Optional.ofNullable(user.getUsername());
+        return Optional.of(currentUsername);
     }
 }

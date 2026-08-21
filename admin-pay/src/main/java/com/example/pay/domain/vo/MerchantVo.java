@@ -1,7 +1,7 @@
 package com.example.pay.domain.vo;
 
 import com.example.pay.domain.entity.Method;
-import com.example.crud.model.vo.BaseVo;
+import com.example.crud.domain.vo.BaseVo;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;

@@ -1,13 +1,13 @@
 package com.example.pay.controller;
 
+import com.example.common.domain.Result;
 import com.example.crud.controller.EntityCrudController;
-import com.example.crud.model.annotation.PermissionPrefix;
+import com.example.crud.domain.annotation.PermissionPrefix;
 import com.example.pay.domain.dto.ApplicationDto;
 import com.example.pay.domain.entity.Application;
 import com.example.pay.domain.query.ApplicationQueryCondition;
 import com.example.pay.domain.vo.ApplicationVo;
 import com.example.pay.domain.vo.SimpleApplicationVo;
-import com.example.pay.domain.vo.SimpleMethodVo;
 import com.example.pay.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class ApplicationController extends EntityCrudController<Application, App
     private final ApplicationService service;
 
     @GetMapping("/findAll")
-    public List<SimpleApplicationVo> findAll() {
-        return service.findAll();
+    public Result<List<SimpleApplicationVo>> findAll() {
+        return Result.success(service.findAll());
     }
 }

@@ -1,6 +1,6 @@
 package com.example.crud.query;
 
-import com.example.crud.model.annotation.Condition;
+import com.example.crud.domain.annotation.Condition;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.From;

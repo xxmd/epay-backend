@@ -1,6 +1,6 @@
 package com.example.file.domain.dto;
 
-import com.example.crud.model.dto.BaseDto;
+import com.example.crud.domain.dto.BaseDto;
 import lombok.Data;
 
 @Data

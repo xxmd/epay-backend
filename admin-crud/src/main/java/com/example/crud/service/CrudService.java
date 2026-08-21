@@ -1,11 +1,12 @@
 package com.example.crud.service;
 
 import com.example.common.exception.BusinessException;
-import com.example.common.model.entity.BaseEntity;
-import com.example.common.model.enums.ErrorCode;
+import com.example.common.domain.entity.BaseEntity;
+import com.example.common.domain.enums.CommonError;
+import com.example.crud.domain.enums.CrudError;
 import com.example.crud.factory.CrudRepositoryFactory;
 import com.example.crud.mapper.BaseMapper;
-import com.example.crud.model.annotation.DataPermission;
+import com.example.crud.domain.annotation.DataPermission;
 import com.example.crud.query.ConditionConverter;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.criteria.Predicate;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.web.PagedModel;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,7 +140,7 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
             for (T entity : entities) {
                 String createdBy = getCreatedBy(entity);
                 if (!currentUser.equals(createdBy)) {
-                    throw new BusinessException(ErrorCode.FORBIDDEN);
+                    throw new BusinessException(CommonError.FORBIDDEN);
                 }
             }
         }
@@ -151,24 +153,13 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
 
     protected String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        if (authentication == null) {
+            throw new BusinessException(CrudError.AUTHENTICATION_IS_NULL);
         }
-        Object principal = authentication.getPrincipal();
-        if (principal != null) {
-            try {
-                // Use reflection to safely extract username from User entity
-                java.lang.reflect.Method getUsernameMethod = principal.getClass().getMethod("getUsername");
-                Object username = getUsernameMethod.invoke(principal);
-                if (username instanceof String) {
-                    return (String) username;
-                }
-            } catch (Exception e) {
-                // Fallback to toString if reflection fails
-                log.debug("Could not extract username via reflection, falling back to toString", e);
-            }
+        if (authentication instanceof UsernamePasswordAuthenticationToken authenticationToken) {
+            return (String) authenticationToken.getPrincipal();
         }
-        return principal.toString();
+        throw new BusinessException(CrudError.GET_CURRENT_USER_FAILURE);
     }
 
     private String getCreatedBy(T entity) {
@@ -189,7 +180,7 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
                 if (entity != null) {
                     String createdBy = getCreatedBy(entity);
                     if (createdBy == null || !getCurrentUsername().equals(createdBy)) {
-                        throw new BusinessException(ErrorCode.FORBIDDEN);
+                        throw new BusinessException(CommonError.FORBIDDEN);
                     }
                 }
             }

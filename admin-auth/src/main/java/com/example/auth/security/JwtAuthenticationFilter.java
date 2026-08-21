@@ -1,9 +1,9 @@
 package com.example.auth.security;
 
-import com.example.system.model.entity.Menu;
-import com.example.system.model.entity.Role;
-import com.example.system.model.entity.User;
-import com.example.system.repository.UserRepository;
+import com.example.common.domain.entity.Menu;
+import com.example.common.domain.entity.Role;
+import com.example.common.domain.entity.User;
+import com.example.common.repository.UserRepository;
 import com.example.auth.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         List<SimpleGrantedAuthority> authorities = permissions.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, token, authorities);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), authorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
         filterChain.doFilter(request, response);
     }

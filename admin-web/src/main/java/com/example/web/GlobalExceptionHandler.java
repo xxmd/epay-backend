@@ -1,15 +1,16 @@
 package com.example.web;
 
 import com.example.common.exception.BusinessException;
+import com.example.common.domain.Result;
+import com.example.web.domain.enums.WebError;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -17,28 +18,22 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Map<String, Object>> handleBusinessException(Exception e) {
+    public ResponseEntity<Result<Void>> handleBusinessException(BusinessException e) {
         log.error(e.getMessage(), e);
-        Map<String, Object> body = new HashMap<>();
-        body.put("message", e.getMessage());
-        return ResponseEntity.badRequest().body(body);
+        return ResponseEntity.ok().body(Result.failure(e.getReason(), e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Result<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
-        Map<String, Object> body = new HashMap<>();
-        body.put("message", errorMessage);
-        return ResponseEntity.badRequest().body(body);
+        return ResponseEntity.ok().body(Result.failure(WebError.METHOD_ARGUMENT_NOT_VALID.name(), errorMessage));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleException(Exception e) {
+    public ResponseEntity<Result<Void>> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        Map<String, Object> body = new HashMap<>();
-        body.put("message", "服务器异常");
-        return ResponseEntity.internalServerError().body(body);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.failure(WebError.UNKNOWN_EXCEPTION));
     }
 }

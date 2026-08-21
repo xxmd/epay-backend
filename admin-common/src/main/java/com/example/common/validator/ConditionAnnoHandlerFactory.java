@@ -1,8 +1,8 @@
 package com.example.common.validator;
 
 
-import com.example.common.model.annotation.ConditionalNotBlank;
-import com.example.common.model.annotation.ConditionalNotNull;
+import com.example.common.domain.annotation.ConditionalNotBlank;
+import com.example.common.domain.annotation.ConditionalNotNull;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;

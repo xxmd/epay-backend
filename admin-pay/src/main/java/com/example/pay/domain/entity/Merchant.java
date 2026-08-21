@@ -1,7 +1,6 @@
 package com.example.pay.domain.entity;
 
-import com.example.common.model.entity.BaseEntity;
-import com.example.pay.domain.entity.Method;
+import com.example.common.domain.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

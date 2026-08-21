@@ -1,6 +1,6 @@
 package com.example.pay.domain.dto;
 
-import com.example.crud.model.dto.BaseDto;
+import com.example.crud.domain.dto.BaseDto;
 import com.example.pay.domain.enums.Platform;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

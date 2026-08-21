@@ -1,8 +1,8 @@
 package com.example.auth.controller;
 
-import com.example.common.model.Result;
-import com.example.common.model.annotation.Anonymous;
-import com.example.auth.model.dto.UserLoginDto;
+import com.example.common.domain.Result;
+import com.example.common.domain.annotation.Anonymous;
+import com.example.auth.domain.dto.UserLoginDto;
 import com.example.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -18,11 +18,12 @@ public class AuthController {
     @Anonymous
     @PostMapping("/login")
     public Result<?> login(@Validated @RequestBody UserLoginDto dto) {
-        return service.login(dto);
+        return Result.success(service.login(dto));
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletRequest request) {
+    public Result<Void> logout(HttpServletRequest request) {
         service.logout(request);
+        return Result.success();
     }
 }

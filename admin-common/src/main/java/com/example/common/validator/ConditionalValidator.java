@@ -1,8 +1,8 @@
 package com.example.common.validator;
 
-import com.example.common.model.annotation.ConditionalNotBlank;
-import com.example.common.model.annotation.ConditionalNotNull;
-import com.example.common.model.annotation.EnableConditionalValidation;
+import com.example.common.domain.annotation.ConditionalNotBlank;
+import com.example.common.domain.annotation.ConditionalNotNull;
+import com.example.common.domain.annotation.EnableConditionalValidation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;

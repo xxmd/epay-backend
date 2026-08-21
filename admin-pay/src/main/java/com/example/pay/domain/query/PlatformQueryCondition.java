@@ -1,6 +1,6 @@
 package com.example.pay.domain.query;
 
-import com.example.crud.model.annotation.Condition;
+import com.example.crud.domain.annotation.Condition;
 import lombok.Data;
 
 @Data

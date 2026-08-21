@@ -1,6 +1,6 @@
 package com.example.pay.domain.vo;
 
-import com.example.crud.model.vo.BaseVo;
+import com.example.crud.domain.vo.BaseVo;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 

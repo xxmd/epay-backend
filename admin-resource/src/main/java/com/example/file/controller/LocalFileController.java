@@ -1,8 +1,8 @@
 package com.example.file.controller;
 
-import com.example.common.model.Result;
+import com.example.common.domain.Result;
 import com.example.crud.controller.EntityCrudController;
-import com.example.crud.model.annotation.PermissionPrefix;
+import com.example.crud.domain.annotation.PermissionPrefix;
 import com.example.file.domain.dto.LocalFileDto;
 import com.example.file.domain.entity.LocalFile;
 import com.example.file.domain.query.LocalFileQueryCondition;
@@ -24,6 +24,6 @@ public class LocalFileController extends EntityCrudController<LocalFile, LocalFi
 
     @PostMapping("/upload")
     public Result<LocalFileVo> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        return service.upload(file);
+        return Result.success(service.upload(file));
     }
 }

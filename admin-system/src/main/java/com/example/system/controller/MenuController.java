@@ -1,11 +1,12 @@
 package com.example.system.controller;
 
+import com.example.common.domain.Result;
 import com.example.crud.controller.EntityCrudController;
-import com.example.crud.model.annotation.PermissionPrefix;
-import com.example.system.model.dto.MenuDto;
-import com.example.system.model.entity.Menu;
-import com.example.system.model.query.MenuQueryCondition;
-import com.example.system.model.vo.MenuVo;
+import com.example.crud.domain.annotation.PermissionPrefix;
+import com.example.system.domain.dto.MenuDto;
+import com.example.common.domain.entity.Menu;
+import com.example.system.domain.query.MenuQueryCondition;
+import com.example.system.domain.vo.MenuVo;
 import com.example.system.service.MenuService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ public class MenuController extends EntityCrudController<Menu, MenuQueryConditio
 
     @GetMapping("/findAll")
     @PreAuthorize("hasAuthority('system:menu:read')")
-    public List<MenuVo> findAll() {
-        return service.findAll();
+    public Result<List<MenuVo>> findAll() {
+        return Result.success(service.findAll());
     }
 }

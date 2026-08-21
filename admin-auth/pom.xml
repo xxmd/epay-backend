@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>admin-system</artifactId>
+            <artifactId>admin-common</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

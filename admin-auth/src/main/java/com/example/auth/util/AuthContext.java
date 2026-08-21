@@ -20,7 +20,7 @@ public class AuthContext {
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new BusinessException(AuthError.AUTHENTICATION_IS_NULL);
+            return "system";
         }
         if (authentication instanceof UsernamePasswordAuthenticationToken authenticationToken) {
             return (String) authenticationToken.getPrincipal();

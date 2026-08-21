@@ -1,15 +1,12 @@
 package com.example.crud.service;
 
-import com.example.common.exception.BusinessException;
-import com.example.common.domain.entity.BaseEntity;
-import com.example.common.domain.enums.CommonError;
-import com.example.crud.domain.enums.CrudError;
 import com.example.crud.factory.CrudRepositoryFactory;
 import com.example.crud.mapper.BaseMapper;
-import com.example.crud.domain.annotation.DataPermission;
 import com.example.crud.query.ConditionConverter;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +22,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * CRUD 基础服务。
+ * <p>
+ * 数据权限由 {@link com.example.crud.domain.annotation.RequireCreatedBy} 注解控制，
+ * 标注在类或方法上后，底层 {@link com.example.crud.repository.DataPermissionJpaRepository}
+ * 自动拦截 JPA 操作，过滤/校验 createdBy。
+ */
 @Slf4j
 @Transactional
 public abstract class CrudService<T, ID, QC, VO, DTO> {
@@ -82,18 +85,9 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
     }
 
     public PagedModel<VO> findAll(QC criteria, Pageable pageable) {
-        Specification<T> spec = (root, query, criteriaBuilder) -> {
-            Predicate predicate = ConditionConverter.toPredicate(root, criteria, criteriaBuilder);
-            if (hasDataPermission()) {
-                String currentUser = getCurrentUsername();
-                Predicate createdByPredicate = criteriaBuilder.equal(root.get("createdBy"), currentUser);
-                predicate = predicate == null ? createdByPredicate : criteriaBuilder.and(predicate, createdByPredicate);
-            }
-            return predicate;
-        };
+        Specification<T> spec = (root, query, cb) -> ConditionConverter.toPredicate(root, criteria, cb);
         Page<T> page = repository.findAll(spec, pageable);
-        Page<VO> voPage = page.map(mapper::toVo);
-        return new PagedModel<>(voPage);
+        return new PagedModel<>(page.map(mapper::toVo));
     }
 
     public void create(DTO dto) {
@@ -102,9 +96,6 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
     }
 
     public void update(DTO dto) {
-        if (hasDataPermission()) {
-            verifyOwnership(dto);
-        }
         T entity = dtoToEntityOnUpdate(dto);
         saveOnUpdate(entity);
     }
@@ -134,60 +125,18 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
     }
 
     public void delete(Set<ID> idSet) {
-        if (hasDataPermission()) {
-            List<T> entities = repository.findAllById(idSet);
-            String currentUser = getCurrentUsername();
-            for (T entity : entities) {
-                String createdBy = getCreatedBy(entity);
-                if (!currentUser.equals(createdBy)) {
-                    throw new BusinessException(CommonError.FORBIDDEN);
-                }
-            }
-        }
         repository.deleteAllById(idSet);
-    }
-
-    protected boolean hasDataPermission() {
-        return getClass().isAnnotationPresent(DataPermission.class);
     }
 
     protected String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BusinessException(CrudError.AUTHENTICATION_IS_NULL);
+        if (authentication instanceof UsernamePasswordAuthenticationToken token) {
+            return (String) token.getPrincipal();
         }
-        if (authentication instanceof UsernamePasswordAuthenticationToken authenticationToken) {
-            return (String) authenticationToken.getPrincipal();
-        }
-        throw new BusinessException(CrudError.GET_CURRENT_USER_FAILURE);
+        throw new RuntimeException("Failed to get current username");
     }
 
-    private String getCreatedBy(T entity) {
-        if (entity instanceof BaseEntity baseEntity) {
-            return baseEntity.getCreatedBy();
-        }
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void verifyOwnership(DTO dto) {
-        try {
-            java.lang.reflect.Field idField = dto.getClass().getSuperclass().getDeclaredField("id");
-            idField.setAccessible(true);
-            Object id = idField.get(dto);
-            if (id != null) {
-                T entity = repository.findById((ID) id).orElse(null);
-                if (entity != null) {
-                    String createdBy = getCreatedBy(entity);
-                    if (createdBy == null || !getCurrentUsername().equals(createdBy)) {
-                        throw new BusinessException(CommonError.FORBIDDEN);
-                    }
-                }
-            }
-        } catch (BusinessException e) {
-            throw e;
-        } catch (Exception e) {
-            log.warn("Failed to verify ownership", e);
-        }
+    protected Predicate buildCreatedByPredicate(Root<?> root, CriteriaBuilder cb) {
+        return cb.equal(root.get("createdBy"), getCurrentUsername());
     }
 }

@@ -1,6 +1,6 @@
 package com.example.pay.service;
 
-import com.example.crud.domain.annotation.DataPermission;
+import com.example.crud.domain.annotation.RequireCreatedBy;
 import com.example.crud.service.EntityCrudService;
 import com.example.file.repository.LocalFileRepository;
 import com.example.pay.domain.dto.ApplicationDto;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@DataPermission
+@RequireCreatedBy
 @Service
 @AllArgsConstructor
 public class ApplicationService extends EntityCrudService<Application, ApplicationQueryCondition, ApplicationVo, ApplicationDto> {
@@ -29,12 +29,7 @@ public class ApplicationService extends EntityCrudService<Application, Applicati
     }
 
     public List<SimpleApplicationVo> findAll() {
-        List<Application> list = repository.findAll((root, query, cb) -> {
-            if (hasDataPermission()) {
-                return cb.equal(root.get("createdBy"), getCurrentUsername());
-            }
-            return null;
-        });
+        List<Application> list = repository.findAll();
         return mapper.toSimpleVoList(list);
     }
 }

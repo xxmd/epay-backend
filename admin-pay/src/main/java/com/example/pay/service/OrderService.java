@@ -2,6 +2,8 @@ package com.example.pay.service;
 
 import com.example.common.exception.BusinessException;
 import com.example.common.domain.enums.CommonError;
+import com.example.crud.domain.annotation.IgnoreDataPermission;
+import com.example.crud.domain.annotation.RequireCreatedBy;
 import com.example.crud.service.EntityCrudService;
 import com.example.pay.domain.dto.OrderDto;
 import com.example.pay.domain.entity.EPayNotifyParam;
@@ -33,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@RequireCreatedBy
 public class OrderService extends EntityCrudService<Order, OrderQueryCondition, OrderVo, OrderDto> {
 
     private final MerchantRepository merchantRepository;
@@ -93,6 +96,7 @@ public class OrderService extends EntityCrudService<Order, OrderQueryCondition, 
         return dateStr + seqStr;
     }
 
+    @IgnoreDataPermission
     public boolean isNotifyParamValid(EPayNotifyParam notifyParam) {
         if (!notifyParam.isValid()) {
             log.warn("notifyParam invalid: {}", notifyParam);

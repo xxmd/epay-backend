@@ -1,5 +1,7 @@
 package com.example.crud.factory;
 
+import com.example.auth.util.AuthContext;
+import com.example.crud.repository.DataPermissionJpaRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -15,16 +17,16 @@ public class CrudRepositoryFactory {
     private ApplicationContext context;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private AuthContext authContext;
 
     public SimpleJpaRepository findOrCreate(ResolvableType entityGeneric, ResolvableType idGeneric) {
-        SimpleJpaRepository repository = null;
-        repository = find(entityGeneric, idGeneric);
+        SimpleJpaRepository repository = find(entityGeneric, idGeneric);
         if (repository == null) {
-            repository = new SimpleJpaRepository<>(entityGeneric.resolve(), entityManager);;
+            repository = new DataPermissionJpaRepository<>(entityGeneric.resolve(), entityManager, authContext);
         }
         return repository;
     }
-
 
     private SimpleJpaRepository find(ResolvableType entityGeneric, ResolvableType idGeneric) {
         Map<String, SimpleJpaRepository> repositoryMap = context.getBeansOfType(SimpleJpaRepository.class);

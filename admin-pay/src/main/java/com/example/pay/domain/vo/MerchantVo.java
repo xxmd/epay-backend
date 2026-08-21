@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class MerchantVo extends BaseVo {
-    private Integer merchantId;
+    private Long merchantId;
 
     private String md5SecretKey;
 

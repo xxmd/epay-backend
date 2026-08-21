@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 public class MerchantDto extends BaseDto {
     @NotNull(message = "商户id不能为空")
-    private Integer merchantId;
+    private Long merchantId;
 
     @NotBlank(message = "商户md5私钥不能为空")
     private String md5SecretKey;

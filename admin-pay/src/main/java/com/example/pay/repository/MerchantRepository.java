@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface MerchantRepository extends JpaRepository<Merchant, Long>, JpaSpecificationExecutor<Merchant> {
 
-    @Query("SELECT DISTINCT m FROM Merchant m JOIN m.methodList method WHERE m.enabled = true AND m.platform.enabled = true AND method.id = :methodId ORDER BY m.sort")
+    @Query("SELECT DISTINCT m FROM Merchant m JOIN m.methodList method WHERE m.enabled = true AND m.platform.enabled = true AND method.id = :methodId")
     List<Merchant> findEnabledMerchantsByMethodId(@Param("methodId") Long methodId);
 }

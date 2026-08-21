@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "pay_merchant")
 public class Merchant extends BaseEntity {
-    private Integer merchantId;
+    private Long merchantId;
 
     @Column(name = "md5_secret_key")
     private String md5SecretKey;

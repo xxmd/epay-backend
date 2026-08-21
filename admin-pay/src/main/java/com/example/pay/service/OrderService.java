@@ -1,7 +1,6 @@
 package com.example.pay.service;
 
 import com.example.common.exception.BusinessException;
-import com.example.common.domain.enums.CommonError;
 import com.example.crud.domain.annotation.IgnoreDataPermission;
 import com.example.crud.domain.annotation.RequireCreatedBy;
 import com.example.crud.service.EntityCrudService;
@@ -14,7 +13,6 @@ import com.example.pay.domain.enums.PayStatus;
 import com.example.pay.domain.query.OrderQueryCondition;
 import com.example.pay.domain.vo.OrderVo;
 import com.example.pay.repository.ApplicationRepository;
-import com.example.pay.repository.MerchantRepository;
 import com.example.pay.repository.MethodRepository;
 import com.example.pay.repository.OrderRepository;
 import io.github.xxmd.epay.api.EPayApiV1;
@@ -37,8 +35,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @RequireCreatedBy
 public class OrderService extends EntityCrudService<Order, OrderQueryCondition, OrderVo, OrderDto> {
-
-    private final MerchantRepository merchantRepository;
+    private final MerchantService merchantService;
     private final ApplicationRepository applicationRepository;
     private final MethodRepository methodRepository;
     private final OrderRepository orderRepository;
@@ -62,11 +59,7 @@ public class OrderService extends EntityCrudService<Order, OrderQueryCondition, 
             throw new IllegalArgumentException("Id must be null when create");
         }
         Order entity = dtoToEntity(dto);
-        List<Merchant> merchants = merchantRepository.findEnabledMerchantsByMethodId(dto.getMethodId());
-        if (merchants.isEmpty()) {
-            throw new BusinessException(CommonError.NO_AVAILABLE_MERCHANT);
-        }
-        entity.setMerchant(merchants.get(0));
+        entity.setMerchant(merchantService.selectBestMerchantByMethodId(dto.getMethodId()));
         entity.setOrderNumber(generateOrderNumber());
         EPayApiV1 ePayApi = buildEPayApi(entity);
         RedirectPayParam redirectPayParam = buildRedirectPayParam(entity);

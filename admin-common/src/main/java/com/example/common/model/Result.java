@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class Result<T> {
-
     private boolean success;
+    private String reason;
     private String message;
     private T data;
 
@@ -21,9 +21,10 @@ public class Result<T> {
         return success(null);
     }
 
-    public static <T> Result<T> failure(String code, String message) {
+    public static <T> Result<T> failure(String reason, String message) {
         Result<T> result = new Result<>();
         result.success = false;
+        result.reason = reason;
         result.message = message;
         return result;
     }

@@ -145,7 +145,7 @@ public abstract class CrudService<T, ID, QC, VO, DTO> {
         repository.deleteAllById(idSet);
     }
 
-    private boolean hasDataPermission() {
+    protected boolean hasDataPermission() {
         return getClass().isAnnotationPresent(DataPermission.class);
     }
 

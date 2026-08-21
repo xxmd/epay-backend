@@ -25,3 +25,6 @@ spring:
 
 file:
   upload-dir: ./files
+
+epay:
+  notifyUrl: http://127.0.0.1:8080/pay/order/notify

@@ -3,7 +3,7 @@ package com.example.pay.domain.vo;
 import lombok.Data;
 
 @Data
-public class SimpleMerchantVo {
+public class SimpleApplicationVo {
     private Long id;
-    private Integer merchantId;
+    private String name;
 }

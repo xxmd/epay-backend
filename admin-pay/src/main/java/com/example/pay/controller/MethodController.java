@@ -27,4 +27,9 @@ public class MethodController extends EntityCrudController<Method, MethodQueryCo
     public Result<List<SimpleMethodVo>> findAll() {
         return Result.success(service.findAll());
     }
+
+    @GetMapping("/findAvailable")
+    public Result<List<SimpleMethodVo>> findAvailable() {
+        return Result.success(service.findAvailable());
+    }
 }

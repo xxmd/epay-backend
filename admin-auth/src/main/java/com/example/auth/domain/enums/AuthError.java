@@ -16,6 +16,17 @@ public enum AuthError implements ReadableError {
 
     AUTHENTICATION_IS_NULL("认证信息为空"),
     GET_CURRENT_USER_FAILURE("获取当前用户失败"),
+
+    MISSING_AUTH("缺少认证信息"),
+    INVALID_TOKEN("令牌无效或已过期"),
+    USER_NOT_FOUND("用户不存在"),
+    USER_DISABLED("用户已禁用"),
+    LACK_REQUIRED_HEADER("缺少认证头 X-Sign"),
+    ACCESS_KEY_NOT_EXISTED("AccessKey不存在"),
+    ACCESS_KEY_DISABLED("AccessKey已禁用"),
+    SIGNATURE_VERIFY_FAILURE("签名验证失败"),
+    BIND_USER_NOT_EXISTED("凭证关联用户不存在"),
+    BIND_USER_DISABLED("凭证关联用户已禁用"),
     ;
 
     AuthError(String message) {

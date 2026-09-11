@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Result<Void>> handleBusinessException(BusinessException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.ok().body(Result.failure(e.getReason(), e.getMessage()));
+        return ResponseEntity.ok().body(Result.failure(400, e.getReason(), e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -28,12 +28,12 @@ public class GlobalExceptionHandler {
         String errorMessage = e.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
-        return ResponseEntity.ok().body(Result.failure(WebError.METHOD_ARGUMENT_NOT_VALID.name(), errorMessage));
+        return ResponseEntity.ok().body(Result.failure(400, WebError.METHOD_ARGUMENT_NOT_VALID.name(), errorMessage));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<Void>> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Result.failure(WebError.UNKNOWN_EXCEPTION));
+        return ResponseEntity.ok().body(Result.failure(500, WebError.UNKNOWN_EXCEPTION.getReason(), WebError.UNKNOWN_EXCEPTION.getMessage()));
     }
 }

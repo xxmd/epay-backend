@@ -59,6 +59,19 @@ public class OrderService extends EntityCrudService<Order, OrderQueryCondition, 
             throw new IllegalArgumentException("Id must be null when create");
         }
         Order entity = dtoToEntity(dto);
+
+        var application = applicationRepository.findById(dto.getApplicationId())
+                .orElseThrow(() -> new BusinessException(PayError.ORDER_NOT_EXISTED));
+        if (!application.getCreatedBy().equals(getCurrentUsername())) {
+            throw new BusinessException(PayError.APPLICATION_NOT_BELONG);
+        }
+
+        var method = methodRepository.findById(dto.getMethodId())
+                .orElseThrow(() -> new BusinessException(PayError.ORDER_NOT_EXISTED));
+        if (!Boolean.TRUE.equals(method.getEnabled())) {
+            throw new BusinessException(PayError.METHOD_DISABLED);
+        }
+
         entity.setMerchant(merchantService.selectBestMerchantByMethodId(dto.getMethodId()));
         entity.setOrderNumber(generateOrderNumber());
         EPayApiV1 ePayApi = buildEPayApi(entity);

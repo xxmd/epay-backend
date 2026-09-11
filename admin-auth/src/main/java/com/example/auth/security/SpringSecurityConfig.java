@@ -30,12 +30,12 @@ import java.util.Set;
 @EnableMethodSecurity
 public class SpringSecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserAuthFilter userAuthFilter;
     private final ApplicationContext applicationContext;
 
-    public SpringSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+    public SpringSecurityConfig(UserAuthFilter userAuthFilter,
                                 ApplicationContext applicationContext) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userAuthFilter = userAuthFilter;
         this.applicationContext = applicationContext;
     }
 
@@ -44,13 +44,9 @@ public class SpringSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * 禁用 Spring Boot 对 JwtAuthenticationFilter 的 Servlet 容器全局自动注册。
-     * 避免该 Filter 在 Standard Filter Chain 和 Spring Security Chain 中被重复执行两次。
-     */
     @Bean
-    public FilterRegistrationBean<JwtAuthenticationFilter> registration(JwtAuthenticationFilter filter) {
-        FilterRegistrationBean<JwtAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
+    public FilterRegistrationBean<UserAuthFilter> userAuthFilterRegistration(UserAuthFilter filter) {
+        FilterRegistrationBean<UserAuthFilter> registration = new FilterRegistrationBean<>(filter);
         registration.setEnabled(false);
         return registration;
     }
@@ -62,7 +58,7 @@ public class SpringSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
-                ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                ).addFilterBefore(userAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

@@ -35,6 +35,28 @@ insert  into `pay_application`(`id`,`icon_file_id`,`name`,`platform`,`enabled`,`
 (1,2,'佛跳墙','ANDROID',1,NULL,'2026-08-20 16:06:53','xxmd3720@gmail.com','2026-08-20 16:06:53','xxmd3720@gmail.com'),
 (2,3,'测试应用','ANDROID',1,NULL,'2026-08-20 17:02:12','guest01','2026-08-20 17:02:12','guest01');
 
+/*Table structure for table `pay_credential` */
+
+CREATE TABLE `pay_credential` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `access_key` varchar(255) DEFAULT NULL,
+  `access_secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  `remark` text,
+  `created_date` datetime DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `modified_by` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `pay_credential` */
+
+insert  into `pay_credential`(`id`,`user_id`,`name`,`access_key`,`access_secret`,`enabled`,`remark`,`created_date`,`created_by`,`modified_date`,`modified_by`) values 
+(1,2,'开发凭证','2ab32b42b7b04ffbb5958c1e1be65321','004cab1af4781cbe34e24a8fc62c7a0de740a30de5a2af9d7088142f15b2d6f2',1,NULL,'2026-08-24 11:24:50','guest01','2026-08-24 11:24:50','guest01');
+
 /*Table structure for table `pay_merchant` */
 
 CREATE TABLE `pay_merchant` (
@@ -191,7 +213,7 @@ CREATE TABLE `sys_menu` (
   `modified_date` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `sys_menu` */
 
@@ -222,8 +244,8 @@ insert  into `sys_menu`(`id`,`parent_id`,`type`,`title`,`path`,`component`,`perm
 (25,17,'BUTTON','修改',NULL,NULL,'pay:merchant:update',NULL,0,'2026-08-19 15:54:03','admin','2026-08-20 10:17:38','admin'),
 (26,17,'BUTTON','删除',NULL,NULL,'pay:merchant:delete',NULL,0,'2026-08-19 15:54:35','admin','2026-08-20 10:17:42','admin'),
 (27,1,'MENU','租户管理','merchant','system/merchant/index','system:merchant:read',4,0,'2026-08-20 10:00:30','admin','2026-08-20 10:00:30','admin'),
-(29,31,'MENU','应用管理','application','pay/application/index','pay:application:read',4,0,'2026-08-20 10:03:40','admin','2026-08-20 17:23:22','admin'),
-(30,31,'MENU','订单管理','order','pay/order/index','pay:order:read',5,0,'2026-08-20 10:04:28','admin','2026-08-20 17:23:29','admin'),
+(29,31,'MENU','应用管理','application','pay/application/index','pay:application:read',5,0,'2026-08-20 10:03:40','admin','2026-08-24 11:15:50','admin'),
+(30,31,'MENU','订单管理','order','pay/order/index','pay:order:read',6,0,'2026-08-20 10:04:28','admin','2026-08-24 11:15:53','admin'),
 (31,NULL,'CATEGORY','支付管理','pay',NULL,NULL,3,0,'2026-08-20 10:11:20','admin','2026-08-20 15:20:37','admin'),
 (32,NULL,'CATEGORY','资源管理','resource',NULL,NULL,2,0,'2026-08-20 15:08:43','admin','2026-08-20 15:20:34','admin'),
 (33,32,'MENU','文件管理','file','resource/file/index','resource:file:read',NULL,0,'2026-08-20 15:09:22','admin','2026-08-20 15:09:22','admin'),
@@ -232,7 +254,11 @@ insert  into `sys_menu`(`id`,`parent_id`,`type`,`title`,`path`,`component`,`perm
 (36,29,'BUTTON','删除',NULL,NULL,'pay:application:delete',NULL,0,'2026-08-20 15:41:27','admin','2026-08-20 15:41:27','admin'),
 (37,30,'BUTTON','新增',NULL,NULL,'pay:order:create',NULL,0,'2026-08-21 10:08:29','admin','2026-08-21 10:08:29','admin'),
 (38,30,'BUTTON','修改',NULL,NULL,'pay:order:update',NULL,0,'2026-08-21 10:08:44','admin','2026-08-21 10:08:44','admin'),
-(39,30,'BUTTON','删除',NULL,NULL,'pay:order:delete',NULL,0,'2026-08-21 10:09:00','admin','2026-08-21 10:09:00','admin');
+(39,30,'BUTTON','删除',NULL,NULL,'pay:order:delete',NULL,0,'2026-08-21 10:09:00','admin','2026-08-21 10:09:00','admin'),
+(41,31,'MENU','凭证管理','credential','pay/credential/index','pay:credential:read',4,0,'2026-08-24 11:08:47','admin','2026-08-24 11:15:43','admin'),
+(42,41,'BUTTON','新增',NULL,NULL,'pay:credential:create',NULL,0,'2026-08-24 11:09:09','admin','2026-08-24 11:20:05','admin'),
+(43,41,'BUTTON','修改',NULL,NULL,'pay:credential:update',NULL,0,'2026-08-24 11:09:24','admin','2026-08-24 11:20:10','admin'),
+(44,41,'BUTTON','删除',NULL,NULL,'pay:credential:delete',NULL,0,'2026-08-24 11:09:37','admin','2026-08-24 11:20:15','admin');
 
 /*Table structure for table `sys_role` */
 
@@ -251,7 +277,7 @@ CREATE TABLE `sys_role` (
 
 insert  into `sys_role`(`id`,`label`,`value`,`created_date`,`created_by`,`modified_date`,`modified_by`) values 
 (1,'系统管理员','admin','2026-08-13 08:18:00','admin','2026-08-20 15:20:09','admin'),
-(2,'租户','tenant','2026-08-13 17:11:51','admin','2026-08-21 10:09:08','admin');
+(2,'商户','merchant','2026-08-13 17:11:51','admin','2026-08-24 11:10:10','admin');
 
 /*Table structure for table `sys_role_menu` */
 
@@ -264,7 +290,7 @@ CREATE TABLE `sys_role_menu` (
   `modified_date` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `sys_role_menu` */
 
@@ -305,7 +331,12 @@ insert  into `sys_role_menu`(`id`,`role_id`,`menu_id`,`created_date`,`created_by
 (37,2,36,NULL,NULL,NULL,NULL),
 (38,2,31,NULL,NULL,NULL,NULL),
 (39,2,37,NULL,NULL,NULL,NULL),
-(40,2,38,NULL,NULL,NULL,NULL);
+(40,2,38,NULL,NULL,NULL,NULL),
+(41,2,42,NULL,NULL,NULL,NULL),
+(42,2,43,NULL,NULL,NULL,NULL),
+(43,2,44,NULL,NULL,NULL,NULL),
+(44,2,41,NULL,NULL,NULL,NULL),
+(45,2,40,NULL,NULL,NULL,NULL);
 
 /*Table structure for table `sys_user` */
 
